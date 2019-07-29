@@ -14,6 +14,7 @@ const (
 	botToken            = "BOT_TOKEN"
 	lifeTimePostsEnvVar = "LIFE_TIME"
 	gopherPicFileEnvVar = "GOPHER_PIC_FILE"
+	updateTimeEnvVar    = "UPDATE_TIME"
 )
 
 func main() {
@@ -33,11 +34,18 @@ func main() {
 	if gopherPicFile == "" {
 		log.Fatalf(`no %q env var`, gopherPicFileEnvVar)
 	}
+	updateTime := os.Getenv(updateTimeEnvVar)
+	if updateTime == "" {
+		log.Fatalf(`no %q env var`, updateTimeEnvVar)
+	}
+	updTime, err := time.ParseDuration(updateTime)
+	if err != nil {
+		log.Fatalf("couldn't parse update time: %s", err)
+	}
 	tgBot, err := bot.New(token)
 	if err != nil {
 		log.Fatalf("couldn't start bot: %s", err)
 	}
-
 	u := tgbotapi.UpdateConfig{
 		Timeout: 60,
 	}
@@ -50,7 +58,7 @@ func main() {
 	c := cache.New()
 	c.ScrapePosts()
 
-	ticker := time.NewTicker(3 * time.Second)
+	ticker := time.NewTicker(updTime)
 	defer ticker.Stop()
 	go func() {
 		for {
