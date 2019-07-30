@@ -1,0 +1,158 @@
+<rss version="2.0">
+    <channel>
+        <title>Хабр / Все / Тематические публикации</title>
+        <link>https://habr.com/ru/</link>
+        <description>
+            <![CDATA[ Все публикации из тематических хабов на Хабре ]]>
+        </description>
+        <language>ru</language>
+        <managingEditor>editor@habr.com</managingEditor>
+        <generator>habr.com</generator>
+        <pubDate>Mon, 29 Jul 2019 14:52:32 GMT</pubDate>
+        <lastBuildDate/>
+        <image>
+            <link>https://habr.com/ru/</link>
+            <url>https://habr.com/images/logo.png</url>
+            <title>Хабр</title>
+        </image>
+        <item>
+            <title>
+                <![CDATA[ Алгоритм поисковой системы SVLAB Search ]]>
+            </title>
+            <guid isPermaLink="true">https://habr.com/ru/post/461767/</guid>
+            <link>
+                https://habr.com/ru/post/461767/?utm_campaign=461767
+            </link>
+            <description>
+                <![CDATA[
+Поисковая система <b>SVLAB Search</b>.<br>
+]]>
+            </description>
+            <pubDate>Mon, 29 Jul 2019 14:25:22 GMT</pubDate>
+            <category>
+                <![CDATA[ Поисковые технологии ]]>
+            </category>
+            <category>
+                <![CDATA[ поисковые системы ]]>
+            </category>
+            <category>
+                <![CDATA[ алгоритмы ]]>
+            </category>
+        </item>
+        <item>
+            <title>
+                <![CDATA[ Прослушка шифрованных VoIP-коммуникаций ]]>
+            </title>
+            <guid isPermaLink="true">https://habr.com/ru/post/461759/</guid>
+            <link>
+                https://habr.com/ru/post/461759/?utm_campaign=461759
+            </link>
+            <description>
+                <![CDATA[VOIP телефония]]>
+            </description>
+            <pubDate>Mon, 29 Jul 2019 14:23:09 GMT</pubDate>
+            <category>
+                <![CDATA[ Информационная безопасность ]]>
+            </category>
+            <category>
+                <![CDATA[ Криптография ]]>
+            </category>
+            <category>
+                <![CDATA[ Математика ]]>
+            </category>
+            <category>
+                <![CDATA[ Разработка систем связи ]]>
+            </category>
+            <category>
+                <![CDATA[ кибербезопасность ]]>
+            </category>
+            <category>
+                <![CDATA[ voip ]]>
+            </category>
+            <category>
+                <![CDATA[ марковские сети ]]>
+            </category>
+            <category>
+                <![CDATA[ dtw ]]>
+            </category>
+            <category>
+                <![CDATA[ hmm-автоматы ]]>
+            </category>
+            <category>
+                <![CDATA[ phmm-автоматы ]]>
+            </category>
+            <category>
+                <![CDATA[ vbr ]]>
+            </category>
+            <category>
+                <![CDATA[ PRISM ]]>
+            </category>
+            <category>
+                <![CDATA[ BULLRUN ]]>
+            </category>
+            <category>
+                <![CDATA[ CELP ]]>
+            </category>
+        </item>
+        <item>
+            <title>
+                <![CDATA[
+[Из песочницы] Могут ли рекламные агентства убивать бизнес в начале пути
+]]>
+            </title>
+            <guid isPermaLink="true">https://habr.com/ru/post/461763/</guid>
+            <link>
+                https://habr.com/ru/post/461763/?utm_campaign=461763
+            </link>
+            <description>
+                <![CDATA[
+Большое количество рекламных объявлений от SMM агентств, которые обещают поток клиентов за маленький бюджет при
+минимальных рисках.И вы <i>задумывались</i> о том, чтобы заказать услуги рекламного агентства для увеличения
+количество клиентов.
+]]>
+            </description>
+            <pubDate>Mon, 29 Jul 2019 14:09:08 GMT</pubDate>
+            <category>
+                <![CDATA[ Медийная реклама ]]>
+            </category>
+            <category>
+                <![CDATA[ Развитие стартапа ]]>
+            </category>
+            <category>реклама в социальных сетях</category>
+            <category>рекламные агентства</category>
+            <category>аутсорсинг</category>
+            <category>маркетинг</category>
+        </item>
+        <item>
+            <title>
+                <![CDATA[ [Перевод] Разбираемся с пакетом Context в Golang ]]>
+            </title>
+            <guid isPermaLink="true">https://habr.com/ru/post/461723/</guid>
+            <link>
+                https://habr.com/ru/post/461723/?utm_campaign=461723
+            </link>
+            <description>
+                <![CDATA[
+ <p>Пакет context в Go полезен при взаимодействиях с API и медленными процессами, особенно в production-grade системах,
+ которые занимаются веб-запросами.
+ С его помощью можно уведомить горутины о необходимости завершить свою работу.</p><br>
+ <p>Ниже небольшое руководство, которое поможет использовать этот пакет в ваших проектах,
+ а также расскажет о некоторых лучших практиках и подводных камнях.</p><br>
+]]>
+            </description>
+            <pubDate>Mon, 29 Jul 2019 10:53:56 GMT</pubDate>
+            <category>
+                <![CDATA[ Блог компании Nixys ]]>
+            </category>
+            <category>
+                <![CDATA[ Программирование ]]>
+            </category>
+            <category>
+                <![CDATA[ Go ]]>
+            </category>
+            <category>Golang</category>
+            <category>Go</category>
+            <category>Программирование</category>
+        </item>
+    </channel>
+</rss>
