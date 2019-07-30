@@ -3,7 +3,7 @@ V := @
 BIN_DIR := ./bin
 GO_NEWS := $(BIN_DIR)/gonews
 
-bin/gonews:
+$(GO_NEWS):
 	$(V)go build -mod vendor -o $(GO_NEWS)
 
 .PHONY: dep
