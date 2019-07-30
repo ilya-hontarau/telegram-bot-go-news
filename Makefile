@@ -1,16 +1,21 @@
+V := @
+
+BIN_DIR := ./bin
+GO_NEWS := $(BIN_DIR)/gonews
+
 bin/gonews:
-	go build -mod vendor -o bin/gonews
+	$(V)go build -mod vendor -o $(GO_NEWS)
 
 .PHONY: dep
 dep:
-	go mod tidy
-	go mod vendor
+	$(V)go mod tidy
+	$(V)go mod vendor
 
 .PHONY: test
 test:
-	go test -v -cover -mod vendor ./...
+	$(V)go test -v -cover -mod vendor ./...
 
 .PHONY: clean
 clean:
-	rm -rf bin
-	go clean -mod vendor
+	$(V)rm -rf bin
+	$(V)go clean -mod vendor
