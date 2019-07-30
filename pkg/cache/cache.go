@@ -27,7 +27,7 @@ func New() *Cache {
 	}
 }
 
-func (cache *Cache) ScrapePosts() {
+func (cache *Cache) ScrapePosts(url string) {
 	c := colly.NewCollector()
 	c.OnError(func(r *colly.Response, err error) {
 		log.Print("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
@@ -47,16 +47,16 @@ func (cache *Cache) ScrapePosts() {
 			}
 		}
 	})
-	err := c.Visit("https://habr.com/ru/rss/hubs/all/")
+	err := c.Visit(url)
 	if err != nil {
 		log.Printf("couldn't scrap: %s", err)
 	}
 	c.Wait()
 }
 
-func (cache *Cache) UpdatePosts(lifeTime time.Duration) {
+func (cache *Cache) UpdatePosts(lifeTime time.Duration, url string) {
 	cache.Lock()
-	cache.ScrapePosts()
+	cache.ScrapePosts(url)
 	cache.deleteOldPosts(lifeTime)
 	cache.Unlock()
 }
@@ -81,11 +81,13 @@ func (cache *Cache) AddUserUrl(userName, url string) {
 func (cache *Cache) deleteOldPosts(lifeTime time.Duration) {
 	timeNow := time.Now()
 	for category, posts := range cache.postsCache {
+		temp := make([]Post, 0, len(posts))
 		for _, post := range posts {
-			if timeNow.Sub(post.AddedAt) > lifeTime {
-				delete(cache.postsCache, category)
+			if timeNow.Sub(post.AddedAt) <= lifeTime {
+				temp = append(temp, post)
 			}
 		}
+		cache.postsCache[category] = temp
 	}
 }
 

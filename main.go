@@ -15,6 +15,7 @@ const (
 	lifeTimePostsEnvVar = "LIFE_TIME"
 	gopherPicFileEnvVar = "GOPHER_PIC_FILE"
 	updateTimeEnvVar    = "UPDATE_TIME"
+	scrapeUrlEnvVar     = "SCRAPE_URL"
 )
 
 func main() {
@@ -38,6 +39,10 @@ func main() {
 	if updateTime == "" {
 		log.Fatalf(`no %q env var`, updateTimeEnvVar)
 	}
+	scrapeUrl := os.Getenv(scrapeUrlEnvVar)
+	if scrapeUrl == "" {
+		log.Fatalf(`no %q env var`, scrapeUrlEnvVar)
+	}
 	updTime, err := time.ParseDuration(updateTime)
 	if err != nil {
 		log.Fatalf("couldn't parse update time: %s", err)
@@ -56,7 +61,7 @@ func main() {
 	}
 
 	c := cache.New()
-	c.ScrapePosts()
+	c.ScrapePosts(scrapeUrl)
 
 	ticker := time.NewTicker(updTime)
 	defer ticker.Stop()
@@ -64,7 +69,7 @@ func main() {
 		for {
 			select {
 			case <-ticker.C:
-				c.UpdatePosts(lifeTime)
+				c.UpdatePosts(lifeTime, scrapeUrl)
 			}
 		}
 	}()
