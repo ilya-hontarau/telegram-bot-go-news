@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     working_directory: ~/telegram-bot-go-news
@@ -9,7 +9,6 @@ jobs:
       GOPHER_PIC_FILE: gopher-no.png
       UPDATE_TIME: 1h
       SCRAPE_URL: https://habr.com/ru/rss/hubs/all
-      BOT_TOKEN: lalalala
     steps:
       - checkout
       - run:
