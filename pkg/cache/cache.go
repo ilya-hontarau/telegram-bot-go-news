@@ -72,7 +72,7 @@ func (cache *Cache) GetLink(category string, userName string) string {
 	return ""
 }
 
-func (cache *Cache) AddUserUrl(userName, url string) {
+func (cache *Cache) AddUserURL(userName, url string) {
 	cache.Lock()
 	cache.userUrls[userName] = append(cache.userUrls[userName], url)
 	cache.Unlock()
@@ -91,9 +91,9 @@ func (cache *Cache) deleteOldPosts(lifeTime time.Duration) {
 	}
 }
 
-func (cache *Cache) userHasLink(userName, userUrl string) bool {
+func (cache *Cache) userHasLink(userName, userURL string) bool {
 	for _, url := range cache.userUrls[userName] {
-		if url == userUrl {
+		if url == userURL {
 			return true
 		}
 	}
