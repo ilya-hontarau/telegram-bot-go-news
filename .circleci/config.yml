@@ -1,0 +1,33 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/telegram-bot-go-news
+    docker:
+      - image: circleci/golang:1.12.6
+    environment:
+      LIFE_TIME: 24h
+      GOPHER_PIC_FILE: gopher-no.png
+      UPDATE_TIME: 1h
+      SCRAPE_URL: https://habr.com/ru/rss/hubs/all
+    steps:
+      - checkout
+      - run:
+          name: Build
+          command: make
+  test:
+    working_directory: ~/telegram-bot-go-news
+    docker:
+      - image: circleci/golang:1.12.6
+    steps:
+      - checkout
+      - run:
+          name: Build
+          command: make test
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
