@@ -15,6 +15,10 @@ dep:
 test:
 	$(V)go test -v -cover -mod vendor ./...
 
+.PHONY: lint
+lint:
+	$(V)golangci-lint run --config .golangci.local.yml
+
 .PHONY: clean
 clean:
 	$(V)rm -rf bin
