@@ -1,5 +1,12 @@
 # github.com/PuerkitoBio/goquery v1.5.0
 github.com/PuerkitoBio/goquery
+# github.com/alecthomas/kingpin v2.2.6+incompatible
+github.com/alecthomas/kingpin
+# github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+github.com/alecthomas/template
+github.com/alecthomas/template/parse
+# github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4
+github.com/alecthomas/units
 # github.com/andybalholm/cascadia v1.0.0
 github.com/andybalholm/cascadia
 # github.com/antchfx/htmlquery v1.0.0
