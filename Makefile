@@ -4,7 +4,7 @@ BIN_DIR := ./bin
 GO_NEWS := $(BIN_DIR)/gonews
 
 $(GO_NEWS):
-	$(V)go build -mod vendor -ldflags "-linkmode external -extldflags -static" -o $(GO_NEWS)
+	$(V)go build -mod vendor -ldflags "-linkmode external -extldflags -static" -o $(GO_NEWS) ./cmd/gonews
 
 .PHONY: dep
 dep:
