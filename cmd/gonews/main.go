@@ -1,4 +1,4 @@
-package gonews
+package main
 
 import (
 	"log"
