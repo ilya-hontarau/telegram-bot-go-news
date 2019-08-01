@@ -13,7 +13,11 @@ dep:
 
 .PHONY: test
 test:
-	$(V)go test -v -cover -mod vendor ./...
+	$(V)go test -v -mod vendor -coverprofile=cover.out -race ./...
+
+.PHONY: lint
+lint:
+	$(V)golangci-lint run --config .golangci.local.yml
 
 .PHONY: clean
 clean:

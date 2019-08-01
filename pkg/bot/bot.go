@@ -47,7 +47,7 @@ func (bot *Bot) NextCommand(update tgbotapi.Update, cache *cache.Cache) {
 		log.Printf("couldn't send post link: %s", err)
 		return
 	}
-	cache.AddUserUrl(userName, link)
+	cache.AddUserURL(userName, link)
 }
 
 func (bot *Bot) StartCommand(update tgbotapi.Update) {

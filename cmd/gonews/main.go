@@ -17,7 +17,7 @@ const botToken = "BOT_TOKEN"
 var (
 	lifeTime   = kingpin.Flag("lifetime", "Life time of posts").Default("24h").Duration()
 	updateTime = kingpin.Flag("updtime", "Posts update time").Default("1h").Duration()
-	scrapeUrl  = kingpin.Flag("url", "Scrape rss channel").Default("https://habr.com/ru/rss/hubs/all/").String()
+	scrapeURL  = kingpin.Flag("url", "Scrape rss channel").Default("https://habr.com/ru/rss/hubs/all/").String()
 )
 
 func main() {
@@ -26,7 +26,6 @@ func main() {
 	if token == "" {
 		log.Fatalf(`no %q env var`, botToken)
 	}
-
 	tgBot, err := bot.New(token)
 	if err != nil {
 		log.Fatalf("couldn't start bot: %s", err)
@@ -41,16 +40,13 @@ func main() {
 	}
 
 	c := cache.New()
-	c.ScrapePosts(*scrapeUrl)
+	c.ScrapePosts(*scrapeURL)
 
 	ticker := time.NewTicker(*updateTime)
 	defer ticker.Stop()
 	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				c.UpdatePosts(*lifeTime, *scrapeUrl)
-			}
+		for range ticker.C {
+			c.UpdatePosts(*lifeTime, *scrapeURL)
 		}
 	}()
 

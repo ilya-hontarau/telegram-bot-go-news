@@ -108,13 +108,13 @@ func TestDeleteOldPosts(t *testing.T) {
 	}{
 		{
 			Name:     "delete_test",
-			LifeTime: time.Duration(10 * time.Minute),
+			LifeTime: 10 * time.Minute,
 			Link:     "https://habr.com/ru/post/461467/",
 			Deleted:  true,
 		},
 		{
 			Name:     "non_delete_test",
-			LifeTime: time.Duration(5 * time.Minute),
+			LifeTime: 5 * time.Minute,
 			Link:     "https://habr.com/ru/post/311467/",
 			Deleted:  false,
 		},
