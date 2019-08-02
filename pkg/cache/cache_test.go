@@ -11,6 +11,25 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type synonymMock struct {
+	categories map[string]string
+}
+
+func newSynonymMock() *synonymMock {
+	return &synonymMock{
+		categories: map[string]string{
+			"go":           "golang",
+			"golang":       "go",
+			"cryptography": "криптография",
+			"криптография": "cryptography",
+		},
+	}
+}
+
+func (s *synonymMock) GetSynonymCategory(category string) string {
+	return s.categories[category]
+}
+
 func habr(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "text/xml")
 	file, err := os.Open("test.xml")
@@ -35,7 +54,7 @@ func TestScrapePosts(t *testing.T) {
 	}{
 		{
 			Name:     "go",
-			Category: "Go",
+			Category: "go",
 			Link:     "https://habr.com/ru/post/461723/",
 		},
 		{
@@ -45,7 +64,7 @@ func TestScrapePosts(t *testing.T) {
 		},
 	}
 	s := httptest.NewServer(http.HandlerFunc(habr))
-	cache := New()
+	cache := New(newSynonymMock())
 	cache.ScrapePosts(s.URL)
 	for _, tc := range tt {
 		t.Run(tc.Name, func(t *testing.T) {
@@ -65,7 +84,7 @@ func TestGetLink(t *testing.T) {
 		{
 			Name:     "correct_test",
 			Result:   "https://habr.com/ru/post/461467/",
-			Category: "go",
+			Category: "Go",
 			UserName: "Ilya",
 		},
 		{
@@ -73,14 +92,31 @@ func TestGetLink(t *testing.T) {
 			Category: "go",
 			UserName: "Sasha",
 		},
+		{
+			Name:     "synonym",
+			Result:   "https://habr.com/ru/post/461723/",
+			Category: "Golang",
+			UserName: "Max",
+		},
+		{
+			Name:     "synonym_in_russian",
+			Result:   "https://habr.com/ru/post/461723/",
+			Category: "cryptography",
+			UserName: "Vlad",
+		},
 	}
-	cache := New()
+	cache := New(newSynonymMock())
 	cache.postsCache["go"] = []Post{
 		{
 			Link: "https://habr.com/ru/post/461723/",
 		},
 		{
 			Link: "https://habr.com/ru/post/461467/",
+		},
+	}
+	cache.postsCache["криптография"] = []Post{
+		{
+			Link: "https://habr.com/ru/post/461723/",
 		},
 	}
 	cache.userUrls["Ilya"] = []string{
@@ -119,7 +155,7 @@ func TestDeleteOldPosts(t *testing.T) {
 			Deleted:  false,
 		},
 	}
-	cache := New()
+	cache := New(newSynonymMock())
 	cache.postsCache["go"] = []Post{
 		{
 			Link:    "https://habr.com/ru/post/501723/",
