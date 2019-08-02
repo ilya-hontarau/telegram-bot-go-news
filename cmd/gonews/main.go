@@ -3,7 +3,11 @@ package main
 import (
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
+
+	"github.com/illfate/telegram-bot-go-news/pkg/config"
 
 	"github.com/alecthomas/kingpin"
 
@@ -15,9 +19,10 @@ import (
 const botToken = "BOT_TOKEN"
 
 var (
-	lifeTime   = kingpin.Flag("lifetime", "Life time of posts").Default("24h").Duration()
-	updateTime = kingpin.Flag("updtime", "Posts update time").Default("1h").Duration()
-	scrapeURL  = kingpin.Flag("url", "Scrape rss channel").Default("https://habr.com/ru/rss/hubs/all/").String()
+	lifeTime       = kingpin.Flag("lifetime", "Life time of posts").Default("24h").Duration()
+	updateTime     = kingpin.Flag("updtime", "Posts update time").Default("1h").Duration()
+	scrapeURL      = kingpin.Flag("url", "Scrape rss channel").Default("https://habr.com/ru/rss/hubs/all/").String()
+	configFilePath = kingpin.Flag("config", "Path to config file of synonyms").Default("synonyms-config.yml").String()
 )
 
 func main() {
@@ -30,6 +35,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("couldn't start bot: %s", err)
 	}
+	conf, err := config.New(*configFilePath)
+	if err != nil {
+		log.Fatalf("couldn't get config: %s", err)
+	}
 	u := tgbotapi.UpdateConfig{
 		Timeout: 60,
 	}
@@ -39,8 +48,22 @@ func main() {
 		return
 	}
 
-	c := cache.New()
+	c := cache.New(conf)
 	c.ScrapePosts(*scrapeURL)
+
+	s := make(chan os.Signal, 1)
+	signal.Notify(s, syscall.SIGUSR1)
+	go func() {
+		for {
+			<-s
+			updatedConfig, err := config.New(*configFilePath)
+			if err != nil {
+				log.Printf("couldn't update config: %s", err)
+				continue
+			}
+			c.UpdateConfig(updatedConfig)
+		}
+	}()
 
 	ticker := time.NewTicker(*updateTime)
 	defer ticker.Stop()
