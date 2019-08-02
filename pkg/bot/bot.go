@@ -22,7 +22,7 @@ func New(token string) (*Bot, error) {
 	}, nil
 }
 
-func (bot *Bot) NextCommand(update tgbotapi.Update, cache *cache.Cache, gopherPicFile string) {
+func (bot *Bot) NextCommand(update tgbotapi.Update, cache *cache.Cache) {
 	category := update.Message.CommandArguments()
 	if category == "" {
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Empty categories arguments.")
@@ -35,7 +35,7 @@ func (bot *Bot) NextCommand(update tgbotapi.Update, cache *cache.Cache, gopherPi
 	userName := update.Message.From.UserName
 	link := cache.GetLink(category, userName)
 	if link == "" {
-		photoConfig := tgbotapi.NewPhotoUpload(update.Message.Chat.ID, gopherPicFile)
+		photoConfig := tgbotapi.NewPhotoUpload(update.Message.Chat.ID, "gopher-no.png")
 		photoConfig.Caption = "No new posts"
 		if _, err := bot.Send(photoConfig); err != nil {
 			log.Printf("couldn't send photo: %s", err)
