@@ -51,6 +51,9 @@ func main() {
 	}()
 
 	for update := range updates {
+		if update.Message == nil {
+			continue
+		}
 		switch update.Message.Command() {
 		case "next":
 			tgBot.NextCommand(update, c)
