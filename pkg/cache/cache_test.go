@@ -47,7 +47,7 @@ func TestScrapePosts(t *testing.T) {
 		},
 	}
 	s := httptest.NewServer(http.HandlerFunc(habr))
-	conf, err := config.New("../../config.yml")
+	conf, err := config.New("test-config.yml")
 	if err != nil {
 		t.Fatal("Couldn't get config file")
 	}
@@ -92,7 +92,7 @@ func TestGetLink(t *testing.T) {
 			UserName: "Vlad",
 		},
 	}
-	conf, err := config.New("../../config.yml")
+	conf, err := config.New("test-config.yml")
 	if err != nil {
 		t.Fatal("Couldn't get config file")
 	}
@@ -146,7 +146,7 @@ func TestDeleteOldPosts(t *testing.T) {
 			Deleted:  false,
 		},
 	}
-	conf, err := config.New("../../config.yml")
+	conf, err := config.New("test-config.yml")
 	if err != nil {
 		t.Fatal("Couldn't get config file")
 	}
