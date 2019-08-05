@@ -48,7 +48,7 @@ func main() {
 		return
 	}
 
-	c := cache.New(conf)
+	c := cache.New(*conf)
 	c.ScrapePosts(*scrapeURL)
 
 	s := make(chan os.Signal, 1)
@@ -60,7 +60,7 @@ func main() {
 				log.Printf("Couldn't create config: %s", err)
 				continue
 			}
-			c.UpdateConfig(updatedConfig)
+			c.UpdateConfig(*updatedConfig)
 		}
 	}()
 
