@@ -15,7 +15,7 @@ type Cache struct {
 	sync.RWMutex
 	postsCache map[string][]Post
 	userUrls   map[string][]string
-	config.Configurer
+	synonym    config.Synonym
 }
 
 type Post struct {
@@ -23,9 +23,9 @@ type Post struct {
 	AddedAt time.Time
 }
 
-func New(conf config.Configurer) *Cache {
+func New(synonym config.Synonym) *Cache {
 	return &Cache{
-		Configurer: conf,
+		synonym:    synonym,
 		postsCache: make(map[string][]Post),
 		userUrls:   make(map[string][]string),
 	}
@@ -43,11 +43,11 @@ func (cache *Cache) ScrapePosts(url string) {
 			link = link[:idx]
 		}
 		for _, category := range e.ChildTexts("//category") {
-			lowerCategory := strings.ToLower(category)
-			synonymCategory := cache.GetSynonymCategory(category)
-			if !postsHasLink(cache.postsCache[lowerCategory], link) &&
+			category := strings.ToLower(category)
+			synonymCategory := cache.synonym.GetCategory(category)
+			if !postsHasLink(cache.postsCache[category], link) &&
 				!postsHasLink(cache.postsCache[synonymCategory], link) {
-				cache.postsCache[lowerCategory] = append(cache.postsCache[lowerCategory], Post{
+				cache.postsCache[category] = append(cache.postsCache[category], Post{
 					Link:    link,
 					AddedAt: time.Now(),
 				})
@@ -72,7 +72,7 @@ func (cache *Cache) GetLink(category string, userName string) string {
 	cache.RLock()
 	defer cache.RUnlock()
 	lowerCategory := strings.ToLower(category)
-	synonymCategory := cache.GetSynonymCategory(lowerCategory)
+	synonymCategory := cache.synonym.GetCategory(lowerCategory)
 	return cache.getLink(userName, lowerCategory, synonymCategory)
 }
 
@@ -82,9 +82,9 @@ func (cache *Cache) AddUserURL(userName, url string) {
 	cache.Unlock()
 }
 
-func (cache *Cache) UpdateConfig(conf config.Configurer) {
+func (cache *Cache) UpdateConfig(s config.Synonym) {
 	cache.Lock()
-	cache.Configurer = conf
+	cache.synonym = s
 	cache.Unlock()
 }
 

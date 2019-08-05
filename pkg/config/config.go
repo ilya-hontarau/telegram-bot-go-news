@@ -8,10 +8,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type Configurer interface {
-	GetSynonymCategory(category string) string
-}
-
 type Synonym struct {
 	Categories map[string]string
 }
@@ -30,6 +26,6 @@ func New(fileName string) (*Synonym, error) {
 	return &synonym, nil
 }
 
-func (s *Synonym) GetSynonymCategory(category string) string {
+func (s *Synonym) GetCategory(category string) string {
 	return s.Categories[category]
 }

@@ -8,27 +8,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/illfate/telegram-bot-go-news/pkg/config"
+
 	"github.com/stretchr/testify/assert"
 )
-
-type synonymMock struct {
-	categories map[string]string
-}
-
-func newSynonymMock() *synonymMock {
-	return &synonymMock{
-		categories: map[string]string{
-			"go":           "golang",
-			"golang":       "go",
-			"cryptography": "криптография",
-			"криптография": "cryptography",
-		},
-	}
-}
-
-func (s *synonymMock) GetSynonymCategory(category string) string {
-	return s.categories[category]
-}
 
 func habr(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "text/xml")
@@ -64,7 +47,11 @@ func TestScrapePosts(t *testing.T) {
 		},
 	}
 	s := httptest.NewServer(http.HandlerFunc(habr))
-	cache := New(newSynonymMock())
+	conf, err := config.New("../../config.yml")
+	if err != nil {
+		t.Fatal("Couldn't get config file")
+	}
+	cache := New(*conf)
 	cache.ScrapePosts(s.URL)
 	for _, tc := range tt {
 		t.Run(tc.Name, func(t *testing.T) {
@@ -105,7 +92,11 @@ func TestGetLink(t *testing.T) {
 			UserName: "Vlad",
 		},
 	}
-	cache := New(newSynonymMock())
+	conf, err := config.New("../../config.yml")
+	if err != nil {
+		t.Fatal("Couldn't get config file")
+	}
+	cache := New(*conf)
 	cache.postsCache["go"] = []Post{
 		{
 			Link: "https://habr.com/ru/post/461723/",
@@ -155,7 +146,11 @@ func TestDeleteOldPosts(t *testing.T) {
 			Deleted:  false,
 		},
 	}
-	cache := New(newSynonymMock())
+	conf, err := config.New("../../config.yml")
+	if err != nil {
+		t.Fatal("Couldn't get config file")
+	}
+	cache := New(*conf)
 	cache.postsCache["go"] = []Post{
 		{
 			Link:    "https://habr.com/ru/post/501723/",
