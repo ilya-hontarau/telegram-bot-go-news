@@ -2,9 +2,6 @@ linters-settings:
   errcheck:
     check-type-assertions: true
 
-  govet:
-    check-shadowing: true
-
 linters:
   enable-all: true
   disable:
