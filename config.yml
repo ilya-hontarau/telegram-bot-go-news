@@ -1,0 +1,15 @@
+categories:
+  go: golang
+  golang: go
+  c++: cpp
+  cpp: c++
+  c: си
+  си: c
+  programming: программирование
+  программирование: programming
+  diy: сделай сам
+  сделай сам: diy
+  linux: линукс
+  линукс: linux
+  cryptography: криптография
+  криптография: cryptography

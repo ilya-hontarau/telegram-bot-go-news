@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/illfate/telegram-bot-go-news/pkg/config"
+
 	"github.com/gocolly/colly"
 )
 
@@ -13,6 +15,7 @@ type Cache struct {
 	sync.RWMutex
 	postsCache map[string][]Post
 	userUrls   map[string][]string
+	synonym    config.Synonym
 }
 
 type Post struct {
@@ -20,8 +23,9 @@ type Post struct {
 	AddedAt time.Time
 }
 
-func New() *Cache {
+func New(synonym config.Synonym) *Cache {
 	return &Cache{
+		synonym:    synonym,
 		postsCache: make(map[string][]Post),
 		userUrls:   make(map[string][]string),
 	}
@@ -39,7 +43,10 @@ func (cache *Cache) ScrapePosts(url string) {
 			link = link[:idx]
 		}
 		for _, category := range e.ChildTexts("//category") {
-			if !postsHasLink(cache.postsCache[category], link) {
+			category := strings.ToLower(category)
+			synonymCategory := cache.synonym.GetCategory(category)
+			if !postsHasLink(cache.postsCache[category], link) &&
+				!postsHasLink(cache.postsCache[synonymCategory], link) {
 				cache.postsCache[category] = append(cache.postsCache[category], Post{
 					Link:    link,
 					AddedAt: time.Now(),
@@ -64,17 +71,20 @@ func (cache *Cache) UpdatePosts(lifeTime time.Duration, url string) {
 func (cache *Cache) GetLink(category string, userName string) string {
 	cache.RLock()
 	defer cache.RUnlock()
-	for _, post := range cache.postsCache[category] {
-		if !cache.userHasLink(userName, post.Link) {
-			return post.Link
-		}
-	}
-	return ""
+	lowerCategory := strings.ToLower(category)
+	synonymCategory := cache.synonym.GetCategory(lowerCategory)
+	return cache.getLink(userName, lowerCategory, synonymCategory)
 }
 
 func (cache *Cache) AddUserURL(userName, url string) {
 	cache.Lock()
 	cache.userUrls[userName] = append(cache.userUrls[userName], url)
+	cache.Unlock()
+}
+
+func (cache *Cache) UpdateConfig(s config.Synonym) {
+	cache.Lock()
+	cache.synonym = s
 	cache.Unlock()
 }
 
@@ -89,6 +99,25 @@ func (cache *Cache) deleteOldPosts(lifeTime time.Duration) {
 		}
 		cache.postsCache[category] = temp
 	}
+}
+
+func (cache *Cache) getLink(userName string, categories ...string) string {
+	for _, category := range categories {
+		link := cache.searchLink(cache.postsCache[category], userName)
+		if link != "" {
+			return link
+		}
+	}
+	return ""
+}
+
+func (cache *Cache) searchLink(posts []Post, userName string) string {
+	for _, post := range posts {
+		if !cache.userHasLink(userName, post.Link) {
+			return post.Link
+		}
+	}
+	return ""
 }
 
 func (cache *Cache) userHasLink(userName, userURL string) bool {

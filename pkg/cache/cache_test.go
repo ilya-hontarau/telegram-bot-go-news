@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/illfate/telegram-bot-go-news/pkg/config"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,7 +37,7 @@ func TestScrapePosts(t *testing.T) {
 	}{
 		{
 			Name:     "go",
-			Category: "Go",
+			Category: "go",
 			Link:     "https://habr.com/ru/post/461723/",
 		},
 		{
@@ -45,7 +47,11 @@ func TestScrapePosts(t *testing.T) {
 		},
 	}
 	s := httptest.NewServer(http.HandlerFunc(habr))
-	cache := New()
+	conf, err := config.New("test-config.yml")
+	if err != nil {
+		t.Fatal("Couldn't get config file")
+	}
+	cache := New(*conf)
 	cache.ScrapePosts(s.URL)
 	for _, tc := range tt {
 		t.Run(tc.Name, func(t *testing.T) {
@@ -65,7 +71,7 @@ func TestGetLink(t *testing.T) {
 		{
 			Name:     "correct_test",
 			Result:   "https://habr.com/ru/post/461467/",
-			Category: "go",
+			Category: "Go",
 			UserName: "Ilya",
 		},
 		{
@@ -73,14 +79,35 @@ func TestGetLink(t *testing.T) {
 			Category: "go",
 			UserName: "Sasha",
 		},
+		{
+			Name:     "synonym",
+			Result:   "https://habr.com/ru/post/461723/",
+			Category: "Golang",
+			UserName: "Max",
+		},
+		{
+			Name:     "synonym_in_russian",
+			Result:   "https://habr.com/ru/post/461723/",
+			Category: "cryptography",
+			UserName: "Vlad",
+		},
 	}
-	cache := New()
+	conf, err := config.New("test-config.yml")
+	if err != nil {
+		t.Fatal("Couldn't get config file")
+	}
+	cache := New(*conf)
 	cache.postsCache["go"] = []Post{
 		{
 			Link: "https://habr.com/ru/post/461723/",
 		},
 		{
 			Link: "https://habr.com/ru/post/461467/",
+		},
+	}
+	cache.postsCache["криптография"] = []Post{
+		{
+			Link: "https://habr.com/ru/post/461723/",
 		},
 	}
 	cache.userUrls["Ilya"] = []string{
@@ -119,7 +146,11 @@ func TestDeleteOldPosts(t *testing.T) {
 			Deleted:  false,
 		},
 	}
-	cache := New()
+	conf, err := config.New("test-config.yml")
+	if err != nil {
+		t.Fatal("Couldn't get config file")
+	}
+	cache := New(*conf)
 	cache.postsCache["go"] = []Post{
 		{
 			Link:    "https://habr.com/ru/post/501723/",
